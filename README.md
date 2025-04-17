@@ -1,4 +1,4 @@
-# hikaro_hotkeys
+# Hikaro_hotkeys
 Альтернатива встановленню Unicode-розкладок.
 
 Особливості:
