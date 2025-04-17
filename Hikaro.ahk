@@ -6,14 +6,12 @@
 
 iniFile := A_ScriptDir "\Hikaro.ini"
 
-; Якщо .ini нема — створити з шаблоном
 if !FileExist(iniFile)
 {
     IniWrite("test13579.exe,test24680.exe", iniFile, "Excluded", "Processes")
 }
 
-; Завжди поверх інших (Ctrl+Alt+Space)
-^!sc039::
+^!sc039:: ; Завжди поверх інших (Ctrl+Alt+Space)
 {
     procName := WinGetProcessName("A")
     list := IniRead(iniFile, "Excluded", "Processes", "")
@@ -41,7 +39,28 @@ RemoveToolTip()
     ToolTip()
 }
 
-; Символи
+AddShortcutToStartup()
+{
+    exePath := A_ScriptFullPath
+    startupFolder := A_Startup
+    shortcutName := StrReplace(A_ScriptName, ".exe", "") ".lnk"
+    shortcutPath := startupFolder "\" shortcutName
+
+    if FileExist(shortcutPath)
+    {
+        FileGetShortcut(shortcutPath, &targetPath)
+
+        if (targetPath = exePath)
+            return
+        else
+            FileDelete(shortcutPath)
+    }
+
+    FileCreateShortcut(exePath, shortcutPath, A_WorkingDir, "", "Autostart " A_ScriptName, exePath, 0)
+}
+
+AddShortcutToStartup()
+
 !sc035::Send("{U+2026}") ; Alt+/ (…)
 !sc00C::Send("{U+2014}") ; Alt+- (—)
 !+sc00C::Send("{U+2013}") ; Alt+Shift+- (–)
