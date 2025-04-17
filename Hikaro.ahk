@@ -41,13 +41,12 @@ RemoveToolTip()
     ToolTip()
 }
 
-; Символи через (Win+...)
-#sc035::Send("{U+2026}") ; Win+/ (…)
-#sc00C::Send("{U+2014}") ; Win+- (—)
-#+sc00C::Send("{U+2013}") ; Win+Shift+- (–)
-#+sc033::Send("{U+00AB}") ; Win+Shift+, («)
-#+sc034::Send("{U+00BB}") ; Win+Shift+. (»)
-
-; Авто-лапки «» з курсором всередині (Alt+Shift+, або .)
-!+sc033::Send("{U+00AB}{U+00BB}{Left}")
-!+sc034::Send("{U+00AB}{U+00BB}{Left}")
+; Символи
+!sc035::Send("{U+2026}") ; Alt+/ (…)
+!sc00C::Send("{U+2014}") ; Alt+- (—)
+!+sc00C::Send("{U+2013}") ; Alt+Shift+- (–)
+!sc033::Send("{U+00AB}") ; Alt+, («)
+!sc034::Send("{U+00BB}") ; Alt+. (»)
+!sc003::Send("{U+2019}") ; Alt+2 (’)
+!sc009::Send("{U+00B0}") ; Alt+8 (°)
+!+sc033::Send("{U+00AB}{U+00BB}{Left}") ; «» з курсором всередині (Alt+Shift+,)
