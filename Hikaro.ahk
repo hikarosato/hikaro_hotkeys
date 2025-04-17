@@ -7,10 +7,10 @@
 
 ; == Завжди поверх інших (Ctrl+Alt+Space) ==
 ^!sc039::
-WinGetClass, winClass, A
-excludedClasses := ["GLFW30", "test1", "test2"]
-for _, cls in excludedClasses
-    if (winClass = cls)
+WinGet, procName, ProcessName, A
+excludedProcs := ["test135.exe", "test246.exe"]
+for _, proc in excludedProcs
+    if (procName = proc)
         return
 
 WinGet, ExStyle, ExStyle, A
