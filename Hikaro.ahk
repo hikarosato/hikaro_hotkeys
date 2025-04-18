@@ -1,17 +1,17 @@
-﻿; Autohotkey v2
+﻿; AutoHotkey v2
 ; Made by Hikaro/Галицький Розбишака
 
 #NoTrayIcon
 #SingleInstance Force
 
-iniFile := A_ScriptDir "\Hikaro.ini"
+iniFile := A_ScriptDir "\Hikaro.ini" ; Файл виключення з правил для AlwaysOnTop функції
 
 if !FileExist(iniFile)
 {
     IniWrite("test13579.exe,test24680.exe", iniFile, "Excluded", "Processes")
 }
 
-^!sc039:: ; Завжди поверх інших (Ctrl+Alt+Space)
+^!sc039:: ; Завжди поверх інших вікон (Ctrl+Alt+Space)
 {
     procName := WinGetProcessName("A")
     list := IniRead(iniFile, "Excluded", "Processes", "")
@@ -39,7 +39,7 @@ RemoveToolTip()
     ToolTip()
 }
 
-AddShortcutToStartup()
+AddShortcutToStartup() ; Створення ярлика на програму, перевірка шляху
 {
     exePath := A_ScriptFullPath
     startupFolder := A_Startup
@@ -61,6 +61,7 @@ AddShortcutToStartup()
 
 AddShortcutToStartup()
 
+; Символи
 !sc035::Send("{U+2026}") ; Alt+/ (…)
 !sc00C::Send("{U+2014}") ; Alt+- (—)
 !+sc00C::Send("{U+2013}") ; Alt+Shift+- (–)
@@ -68,4 +69,14 @@ AddShortcutToStartup()
 !sc034::Send("{U+00BB}") ; Alt+. (»)
 !sc003::Send("{U+2019}") ; Alt+2 (’)
 !sc009::Send("{U+00B0}") ; Alt+8 (°)
-!+sc033::Send("{U+00AB}{U+00BB}{Left}") ; «» з курсором всередині (Alt+Shift+,)
+!+sc033::Send("{U+00AB}{U+00BB}{Left}") ; «» з курсором усередині (Alt+Shift+,)
+
+; На випадок використання розкладки Укр (розшир.)
+<^>!sc035::Send("{U+2026}") ; AltGr+/ (…)
+<^>!sc00C::Send("{U+2014}") ; AltGr+- (—)
+<^>!+sc00C::Send("{U+2013}") ; AltGr+Shift+- (–)
+<^>!sc033::Send("{U+00AB}") ; AltGr+, («)
+<^>!sc034::Send("{U+00BB}") ; AltGr+. (»)
+<^>!sc003::Send("{U+2019}") ; AltGr+2 (’)
+<^>!sc009::Send("{U+00B0}") ; AltGr+8 (°)
+<^>!+sc033::Send("{U+00AB}{U+00BB}{Left}") ; «» з курсором усередині (AltGr+Shift+,)
