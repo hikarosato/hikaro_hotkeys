@@ -1,6 +1,6 @@
 ﻿; AutoHotkey v2
 ; Made by Hikaro/Галицький Розбишака
-; v1.5.2
+; v1.5.3
 
 #NoTrayIcon
 #SingleInstance Force
@@ -80,22 +80,20 @@ AddShortcutToStartup()
 
 AddShortcutToStartup()
 
-; Символи
-!sc035::SendInput("{U+2026}")  ; Alt+/ (…)
-!sc00C::SendInput("{U+2014}")  ; Alt+- (—)
-!+sc00C::SendInput("{U+2013}")  ; Alt+Shift+- (–)
-!sc033::SendInput("{U+00AB}")  ; Alt+, («)
-!sc034::SendInput("{U+00BB}")  ; Alt+. (»)
-!sc003::SendInput("{U+2019}")  ; Alt+2 (’)
-!sc009::SendInput("{U+00B0}")  ; Alt+8 (°)
-!+sc033::SendInput("{U+00AB}{U+00BB}{Left}")  ; «» з курсором усередині (Alt+Shift+,)
+!sc035::Send "{U+2026}" ; Alt+/ (…)
+!sc00C::Send "{U+2014}" ; Alt+- (—)
+!+sc00C::Send "{U+2013}" ; Alt+Shift+- (–)
+!sc033::Send "{U+00AB}" ; Alt+, («)
+!sc034::Send "{U+00BB}" ; Alt+. (»)
+!sc003::Send "{U+2019}" ; Alt+2 (’)
+!sc009::Send "{U+00B0}" ; Alt+8 (°)
+!+sc033::Send "{U+00AB}{U+00BB}{Left}" ; Alt+Shift+, («» з курсором усередині)
 
-; На випадок використання розкладки Українська (розширена)
-<^>!sc035::SendInput("{U+2026}")  ; AltGr+/ (…)
-<^>!sc00C::SendInput("{U+2014}")  ; AltGr+- (—)
-<^>!+sc00C::SendInput("{U+2013}")  ; AltGr+Shift+- (–)
-<^>!sc033::SendInput("{U+00AB}")  ; AltGr+, («)
-<^>!sc034::SendInput("{U+00BB}")  ; AltGr+. (»)
-<^>!sc003::SendInput("{U+2019}")  ; AltGr+2 (’)
-<^>!sc009::SendInput("{U+00B0}")  ; AltGr+8 (°)
-<^>!+sc033::SendInput("{U+00AB}{U+00BB}{Left}")  ; «» з курсором усередині (AltGr+Shift+,)
+<^>!sc035::Send "{U+2026}" ; AltGr+/ (…)
+<^>!sc00C::Send "{U+2014}" ; AltGr+- (—)
+<^>!+sc00C::Send "{U+2013}" ; AltGr+Shift+- (–)
+<^>!sc033::Send "{U+00AB}" ; AltGr+, («)
+<^>!sc034::Send "{U+00BB}" ; AltGr+. (»)
+<^>!sc003::Send "{U+2019}" ; AltGr+2 (’)
+<^>!sc009::Send "{U+00B0}" ; AltGr+8 (°)
+<^>!+sc033::Send "{U+00AB}{U+00BB}{Left}" ; AltGr+Shift+, («» з курсором усередині)
