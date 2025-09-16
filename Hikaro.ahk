@@ -81,7 +81,7 @@ AddShortcutToStartup()
 AddShortcutToStartup()
 
 ; Перезапуск щопівгодини
-; SetTimer(ReLaunch, 1800000)
+SetTimer(ReLaunch, 1800000)
 
 ReLaunch() {
     Run(A_ScriptFullPath " /bg")
