@@ -1,6 +1,6 @@
 ﻿; AutoHotkey v2
 ; Made by Hikaro/Галицький Розбишака
-; v1.5.3
+; v1.6
 
 #NoTrayIcon
 #SingleInstance Force
@@ -73,27 +73,37 @@ AddShortcutToStartup()
     }
     FileCreateShortcut(exePath, shortcutPath, A_WorkingDir, "/bg", "", exePath, 0)
     MsgBox(
-        "Програма автоматично додана в автозапуск Windows.`n`n"
+        "Програму додано в автозапуск Windows.`n`n"
       . "Для видалення з автозапуску, запустіть .exe ще раз.",
         "Hikaro Hotkeys", 0)
 }
 
 AddShortcutToStartup()
 
-!sc035::Send "{U+2026}" ; Alt+/ (…)
-!sc00C::Send "{U+2014}" ; Alt+- (—)
-!+sc00C::Send "{U+2013}" ; Alt+Shift+- (–)
-!sc033::Send "{U+00AB}" ; Alt+, («)
-!sc034::Send "{U+00BB}" ; Alt+. (»)
-!sc003::Send "{U+2019}" ; Alt+2 (’)
-!sc009::Send "{U+00B0}" ; Alt+8 (°)
-!+sc033::Send "{U+00AB}{U+00BB}{Left}" ; Alt+Shift+, («» з курсором усередині)
+; Перезапуск щопівгодини
+; SetTimer(ReLaunch, 1800000)
 
-<^>!sc035::Send "{U+2026}" ; AltGr+/ (…)
-<^>!sc00C::Send "{U+2014}" ; AltGr+- (—)
-<^>!+sc00C::Send "{U+2013}" ; AltGr+Shift+- (–)
-<^>!sc033::Send "{U+00AB}" ; AltGr+, («)
-<^>!sc034::Send "{U+00BB}" ; AltGr+. (»)
-<^>!sc003::Send "{U+2019}" ; AltGr+2 (’)
-<^>!sc009::Send "{U+00B0}" ; AltGr+8 (°)
-<^>!+sc033::Send "{U+00AB}{U+00BB}{Left}" ; AltGr+Shift+, («» з курсором усередині)
+ReLaunch() {
+    Run(A_ScriptFullPath " /bg")
+    ExitApp
+}
+
+; Комбінації клавіш
+!sc035::Send "{U+2026}"  ; Alt+/ (…)
+!sc00C::Send "{U+2014}"  ; Alt+- (—)
+!+sc00C::Send "{U+2013}"  ; Alt+Shift+- (–)
+!sc033::Send "{U+00AB}"  ; Alt+, («)
+!sc034::Send "{U+00BB}"  ; Alt+. (»)
+!sc003::Send "{U+2019}"  ; Alt+2 (’)
+!sc009::Send "{U+00B0}"  ; Alt+8 (°)
+!+sc033::Send "{U+00AB}{U+00BB}{Left}"  ; Alt+Shift+, («» з курсором усередині)
++sc039::Send "{U+00A0}"  ; Shift+Space (нерозривний пробіл)
+
+<^>!sc035::Send "{U+2026}"  ; AltGr+/ (…)
+<^>!sc00C::Send "{U+2014}"  ; AltGr+- (—)
+<^>!+sc00C::Send "{U+2013}"  ; AltGr+Shift+- (–)
+<^>!sc033::Send "{U+00AB}"  ; AltGr+, («)
+<^>!sc034::Send "{U+00BB}"  ; AltGr+. (»)
+<^>!sc003::Send "{U+2019}"  ; AltGr+2 (’)
+<^>!sc009::Send "{U+00B0}"  ; AltGr+8 (°)
+<^>!+sc033::Send "{U+00AB}{U+00BB}{Left}"  ; AltGr+Shift+, («» з курсором усередині)
