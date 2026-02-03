@@ -78,110 +78,27 @@ ReLaunch() {
     ExitApp
 }
 
-ReleaseModifiers()
-{
+; Функція для відправки символу з юнікоду + відпускання модифікаторів
+SendUnicode(code) {
+    Send "{Blind}" code
     Send "{LCtrl up}{RCtrl up}{LAlt up}{RAlt up}{LShift up}{RShift up}{LWin up}{RWin up}"
 }
 
 ; Комбінації клавіш
-!sc035::  ; Alt+/ (…)
-{
-    Send "{U+2026}"
-    ReleaseModifiers()
-}
+!sc035:: SendUnicode("{U+2026}")       ; Alt + / (…)
+!sc00C:: SendUnicode("{U+2014}")       ; Alt + - (—)
+!+sc00C:: SendUnicode("{U+2013}")      ; Alt + Shift + - (–)
+!sc033:: SendUnicode("{U+00AB}")       ; Alt + , («)
+!sc034:: SendUnicode("{U+00BB}")       ; Alt + . (»)
+!sc029:: SendUnicode("{U+2019}")       ; Alt + ~ (’)
+!sc009:: SendUnicode("{U+00B0}")       ; Alt + 8 (°)
+!+sc033:: SendUnicode("{U+00AB}{U+00BB}{Left}") ; Alt + Shift + , («» з курсором усередині)
 
-!sc00C::  ; Alt+- (—)
-{
-    Send "{U+2014}"
-    ReleaseModifiers()
-}
-
-!+sc00C::  ; Alt+Shift+- (–)
-{
-    Send "{U+2013}"
-    ReleaseModifiers()
-}
-
-!sc033::  ; Alt+, («)
-{
-    Send "{U+00AB}"
-    ReleaseModifiers()
-}
-
-!sc034::  ; Alt+. (»)
-{
-    Send "{U+00BB}"
-    ReleaseModifiers()
-}
-
-!sc029::  ; Alt+~ (')
-{
-    Send "{U+2019}"
-    ReleaseModifiers()
-}
-
-!sc009::  ; Alt+8 (°)
-{
-    Send "{U+00B0}"
-    ReleaseModifiers()
-}
-
-!+sc033::  ; Alt+Shift+, («» з курсором усередині)
-{
-    Send "{U+00AB}{U+00BB}{Left}"
-    ReleaseModifiers()
-}
-
-+sc039::  ; Shift+Space (нерозривний пробіл)
-{
-    Send "{U+00A0}"
-    ReleaseModifiers()
-}
-
-<^>!sc035::  ; AltGr+/ (…)
-{
-    Send "{U+2026}"
-    ReleaseModifiers()
-}
-
-<^>!sc00C::  ; AltGr+- (—)
-{
-    Send "{U+2014}"
-    ReleaseModifiers()
-}
-
-<^>!+sc00C::  ; AltGr+Shift+- (–)
-{
-    Send "{U+2013}"
-    ReleaseModifiers()
-}
-
-<^>!sc033::  ; AltGr+, («)
-{
-    Send "{U+00AB}"
-    ReleaseModifiers()
-}
-
-<^>!sc034::  ; AltGr+. (»)
-{
-    Send "{U+00BB}"
-    ReleaseModifiers()
-}
-
-<^>!sc029::  ; AltGr+~ (')
-{
-    Send "{U+2019}"
-    ReleaseModifiers()
-}
-
-<^>!sc009::  ; AltGr+8 (°)
-{
-    Send "{U+00B0}"
-    ReleaseModifiers()
-}
-
-<^>!+sc033::  ; AltGr+Shift+, («» з курсором усередині)
-{
-    Send "{U+00AB}{U+00BB}{Left}"
-    ReleaseModifiers()
-}
+<^>!sc035:: SendUnicode("{U+2026}")     ; AltGr + / (…)
+<^>!sc00C:: SendUnicode("{U+2014}")     ; AltGr + - (—)
+<^>!+sc00C:: SendUnicode("{U+2013}")    ; AltGr + Shift + - (–)
+<^>!sc033:: SendUnicode("{U+00AB}")     ; AltGr + , («)
+<^>!sc034:: SendUnicode("{U+00BB}")     ; AltGr + . (»)
+<^>!sc029:: SendUnicode("{U+2019}")     ; AltGr + ~ (’)
+<^>!sc009:: SendUnicode("{U+00B0}")     ; AltGr + 8 (°)
+<^>!+sc033:: SendUnicode("{U+00AB}{U+00BB}{Left}") ; AltGr + Shift + , («» з курсором усередині)
