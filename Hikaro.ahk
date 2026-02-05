@@ -1,104 +1,88 @@
 ﻿; AutoHotkey v2
-; Made by Hikaro/Галицький Розбишака
-; v1.7 - Fixed sticky modifiers
+; v1.8 - Оптимізовано стабільність, прибрано конфліктний перезапуск
 #NoTrayIcon
 #SingleInstance Force
+#UseHook True              ; Примусове використання хука (вирішує проблему "залипання")
+InstallKeybdHook()         ; Встановлення хука клавіатури для кращого відстеження
 
-iniFile := A_ScriptDir "\Hikaro.ini" ; Файл виключення з правил для AlwaysOnTop функції
+iniFile := A_ScriptDir "\Hikaro.ini"
 if !FileExist(iniFile)
-{
     IniWrite("test13579.exe,test24680.exe", iniFile, "Excluded", "Processes")
-}
 
-IsTopMost(hwnd := "A")
-{
-    return (WinGetExStyle(hwnd) & 0x8) != 0
-}
+IsTopMost(hwnd := "A") => (WinGetExStyle(hwnd) & 0x8) != 0
 
-^!sc039::  ; Завжди поверх інших вікон (Ctrl+Alt+Space)
+; --- Гарячі клавіші ---
+
+^!sc039:: ; Ctrl+Alt+Space (AlwaysOnTop)
 {
     procName := WinGetProcessName("A")
     list := IniRead(iniFile, "Excluded", "Processes", "")
+    excludedProcs := (list = "") ? [] : StrSplit(Trim(list, " ,"), ",")
     
-    if (list = "")
-        excludedProcs := []
-    else
-        excludedProcs := StrSplit(Trim(list, " ,"), ",")
     for proc in excludedProcs
         if (procName = Trim(proc))
             return
+            
     hwnd := WinExist("A")
     WinSetAlwaysOnTop(!IsTopMost(hwnd), hwnd)
-    
-    msg := "Процес: " procName "`nAlwaysOnTop: " (IsTopMost(hwnd) ? "Увімк." : "Вимк.")
-    ToolTip(msg)
-    SetTimer(RemoveToolTip, -1500)
+    ToolTip("Процес: " procName "`nAlwaysOnTop: " (IsTopMost(hwnd) ? "Увімк." : "Вимк."))
+    SetTimer(() => ToolTip(), -1500)
 }
 
-RemoveToolTip()
-{
-    ToolTip()
-}
+; --- Функція вставки символів ---
 
-AddShortcutToStartup()
-{
-    exePath := A_ScriptFullPath
-    startupFolder := A_Startup
-    shortcutName := StrReplace(A_ScriptName, ".exe", "") ".lnk"
-    shortcutPath := startupFolder "\" shortcutName
-    if FileExist(shortcutPath)
-    {
-        FileGetShortcut(shortcutPath, &targetPath, &workDir, &args)
-        if (targetPath = exePath && args = "/bg")
-        {
-            if (A_Args.Length = 0)
-            {
-                FileDelete(shortcutPath)
-                MsgBox("Програму видалено з автозапуску Windows і закрито.", "Hikaro Hotkeys", 0)
-                ExitApp
-            }
-            return
-        }
-        else
-        {
-            FileDelete(shortcutPath)
-        }
-    }
-    FileCreateShortcut(exePath, shortcutPath, A_WorkingDir, "/bg", "", exePath, 0)
-    MsgBox(
-        "Програму додано в автозапуск Windows.`nДля видалення з автозапуску, запустіть .exe ще раз.", "Hikaro Hotkeys", 0)
-}
-
-AddShortcutToStartup()
-
-; Перезапуск щопівгодини
-SetTimer(ReLaunch, 1800000)
-ReLaunch() {
-    Run(A_ScriptFullPath " /bg")
-    ExitApp
-}
-
-; Функція для відправки символу з юнікоду + відпускання модифікаторів
 SendUnicode(code) {
-    Send "{Blind}" code
-    Send "{LCtrl up}{RCtrl up}{LAlt up}{RAlt up}{LShift up}{RShift up}{LWin up}{RWin up}"
+    ; Чекаємо, поки користувач відпустить клавіші, щоб не було "залипання"
+    KeyWait "Alt"
+    KeyWait "Ctrl"
+    SendText code ; SendText надійніший для юнікоду в v2
 }
 
-; Комбінації клавіш
-!sc035:: SendUnicode("{U+2026}")       ; Alt + / (…)
-!sc00C:: SendUnicode("{U+2014}")       ; Alt + - (—)
-!+sc00C:: SendUnicode("{U+2013}")      ; Alt + Shift + - (–)
-!sc033:: SendUnicode("{U+00AB}")       ; Alt + , («)
-!sc034:: SendUnicode("{U+00BB}")       ; Alt + . (»)
-!sc029:: SendUnicode("{U+2019}")       ; Alt + ~ (’)
-!sc009:: SendUnicode("{U+00B0}")       ; Alt + 8 (°)
-!+sc033:: SendUnicode("{U+00AB}{U+00BB}{Left}") ; Alt + Shift + , («» з курсором усередині)
+; --- Список комбінацій ---
 
-<^>!sc035:: SendUnicode("{U+2026}")     ; AltGr + / (…)
-<^>!sc00C:: SendUnicode("{U+2014}")     ; AltGr + - (—)
-<^>!+sc00C:: SendUnicode("{U+2013}")    ; AltGr + Shift + - (–)
-<^>!sc033:: SendUnicode("{U+00AB}")     ; AltGr + , («)
-<^>!sc034:: SendUnicode("{U+00BB}")     ; AltGr + . (»)
-<^>!sc029:: SendUnicode("{U+2019}")     ; AltGr + ~ (’)
-<^>!sc009:: SendUnicode("{U+00B0}")     ; AltGr + 8 (°)
-<^>!+sc033:: SendUnicode("{U+00AB}{U+00BB}{Left}") ; AltGr + Shift + , («» з курсором усередині)
+!sc035:: SendUnicode("…")         ; Alt + /
+!sc00C:: SendUnicode("—")         ; Alt + -
+!+sc00C:: SendUnicode("–")        ; Alt + Shift + -
+!sc033:: SendUnicode("«")         ; Alt + ,
+!sc034:: SendUnicode("»")         ; Alt + .
+!sc029:: SendUnicode("’")         ; Alt + ~
+!sc009:: SendUnicode("°")         ; Alt + 8
+!+sc033:: {                       ; Alt + Shift + ,
+    SendText "«»"
+    Send "{Left}"
+}
+
+; Дублювання для AltGr (правий Alt)
+<^>!sc035:: SendUnicode("…")
+<^>!sc00C:: SendUnicode("—")
+<^>!+sc00C:: SendUnicode("–")
+<^>!sc033:: SendUnicode("«")
+<^>!sc034:: SendUnicode("»")
+<^>!sc029:: SendUnicode("’")
+<^>!sc009:: SendUnicode("°")
+<^>!+sc033:: {
+    SendText "«»"
+    Send "{Left}"
+}
+
+; --- Автозапуск ---
+
+AddShortcutToStartup() {
+    shortcutPath := A_Startup "\" StrReplace(A_ScriptName, ".exe", "") ".lnk"
+    if (A_Args.Length > 0 && A_Args[1] = "/bg")
+        return
+
+    if FileExist(shortcutPath) {
+        if (MsgBox("Програма вже в автозапуску. Видалити?", "Hikaro Hotkeys", "YesNo") = "Yes") {
+            FileDelete(shortcutPath)
+            MsgBox("Видалено.")
+            ExitApp()
+        }
+        return
+    }
+    
+    FileCreateShortcut(A_ScriptFullPath, shortcutPath, A_WorkingDir, "/bg")
+    MsgBox("Додано в автозапуск.")
+}
+
+AddShortcutToStartup()
