@@ -1,9 +1,8 @@
 ﻿; AutoHotkey v2
-; v1.8 - Оптимізовано стабільність, прибрано конфліктний перезапуск
+; v1.9
 #NoTrayIcon
 #SingleInstance Force
 #UseHook True              ; Примусове використання хука (вирішує проблему "залипання")
-InstallKeybdHook()         ; Встановлення хука клавіатури для кращого відстеження
 
 iniFile := A_ScriptDir "\Hikaro.ini"
 if !FileExist(iniFile)
@@ -30,16 +29,15 @@ IsTopMost(hwnd := "A") => (WinGetExStyle(hwnd) & 0x8) != 0
 }
 
 ; --- Функція вставки символів ---
-
 SendUnicode(code) {
-    ; Чекаємо, поки користувач відпустить клавіші, щоб не було "залипання"
-    KeyWait "Alt"
-    KeyWait "Ctrl"
-    SendText code ; SendText надійніший для юнікоду в v2
+    KeyWait "LAlt"
+    KeyWait "RAlt"
+    KeyWait "LControl"
+    KeyWait "RControl"
+    SendText code
 }
 
 ; --- Список комбінацій ---
-
 !sc035:: SendUnicode("…")         ; Alt + /
 !sc00C:: SendUnicode("—")         ; Alt + -
 !+sc00C:: SendUnicode("–")        ; Alt + Shift + -
@@ -49,6 +47,9 @@ SendUnicode(code) {
 !sc009:: SendUnicode("°")         ; Alt + 8
 !+sc033:: {                       ; Alt + Shift + ,
     SendText "«»"
+    KeyWait "Shift"
+	KeyWait "LAlt"
+	KeyWait "RAlt"
     Send "{Left}"
 }
 
@@ -62,6 +63,9 @@ SendUnicode(code) {
 <^>!sc009:: SendUnicode("°")
 <^>!+sc033:: {
     SendText "«»"
+    KeyWait "Shift"
+    KeyWait "LAlt"
+	KeyWait "RAlt"
     Send "{Left}"
 }
 
