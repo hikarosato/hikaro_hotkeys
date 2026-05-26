@@ -1,8 +1,8 @@
 ﻿; AutoHotkey v2
-; v1.9
+; v2.0
 #NoTrayIcon
 #SingleInstance Force
-#UseHook True              ; Примусове використання хука (вирішує проблему "залипання")
+#UseHook True
 
 iniFile := A_ScriptDir "\Hikaro.ini"
 if !FileExist(iniFile)
@@ -10,30 +10,8 @@ if !FileExist(iniFile)
 
 IsTopMost(hwnd := "A") => (WinGetExStyle(hwnd) & 0x8) != 0
 
-; --- Гарячі клавіші ---
-
-^!sc039:: ; Ctrl+Alt+Space (AlwaysOnTop)
-{
-    procName := WinGetProcessName("A")
-    list := IniRead(iniFile, "Excluded", "Processes", "")
-    excludedProcs := (list = "") ? [] : StrSplit(Trim(list, " ,"), ",")
-    
-    for proc in excludedProcs
-        if (procName = Trim(proc))
-            return
-            
-    hwnd := WinExist("A")
-    WinSetAlwaysOnTop(!IsTopMost(hwnd), hwnd)
-    ToolTip("Процес: " procName "`nAlwaysOnTop: " (IsTopMost(hwnd) ? "Увімк." : "Вимк."))
-    SetTimer(() => ToolTip(), -1500)
-}
-
 ; --- Функція вставки символів ---
 SendUnicode(code) {
-    KeyWait "LAlt"
-    KeyWait "RAlt"
-    KeyWait "LControl"
-    KeyWait "RControl"
     SendText code
 }
 
@@ -69,8 +47,24 @@ SendUnicode(code) {
     Send "{Left}"
 }
 
-; --- Автозапуск ---
+; --- Гарячі клавіші ---
+^!sc039:: ; Ctrl+Alt+Space (AlwaysOnTop)
+{
+    procName := WinGetProcessName("A")
+    list := IniRead(iniFile, "Excluded", "Processes", "")
+    excludedProcs := (list = "") ? [] : StrSplit(Trim(list, " ,"), ",")
+    
+    for proc in excludedProcs
+        if (procName = Trim(proc))
+            return
+            
+    hwnd := WinExist("A")
+    WinSetAlwaysOnTop(!IsTopMost(hwnd), hwnd)
+    ToolTip("Процес: " procName "`nAlwaysOnTop: " (IsTopMost(hwnd) ? "Увімк." : "Вимк."))
+    SetTimer(() => ToolTip(), -1500)
+}
 
+; --- Автозапуск ---
 AddShortcutToStartup() {
     shortcutPath := A_Startup "\" StrReplace(A_ScriptName, ".exe", "") ".lnk"
     if (A_Args.Length > 0 && A_Args[1] = "/bg")
