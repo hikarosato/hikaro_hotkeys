@@ -1,5 +1,5 @@
 ﻿; AutoHotkey v2
-; v2.0
+; v2.1
 #NoTrayIcon
 #SingleInstance Force
 #UseHook True
@@ -16,20 +16,13 @@ SendUnicode(code) {
 }
 
 ; --- Список комбінацій ---
-!sc035:: SendUnicode("…")         ; Alt + /
-!sc00C:: SendUnicode("—")         ; Alt + -
-!+sc00C:: SendUnicode("–")        ; Alt + Shift + -
-!sc033:: SendUnicode("«")         ; Alt + ,
-!sc034:: SendUnicode("»")         ; Alt + .
-!sc029:: SendUnicode("’")         ; Alt + ~
-!sc009:: SendUnicode("°")         ; Alt + 8
-!+sc033:: {                       ; Alt + Shift + ,
-    SendText "«»"
-    KeyWait "Shift"
-	KeyWait "LAlt"
-	KeyWait "RAlt"
-    Send "{Left}"
-}
+!sc035:: SendUnicode("…")		; Alt + /
+!sc00C:: SendUnicode("—")	; Alt + -
+!+sc00C:: SendUnicode("–")	; Alt + Shift + -
+!sc033:: SendUnicode("«")		; Alt + ,
+!sc034:: SendUnicode("»")		; Alt + .
+!sc029:: SendUnicode("’")		; Alt + ~
+!sc009:: SendUnicode("°")		; Alt + 8
 
 ; Дублювання для AltGr (правий Alt)
 <^>!sc035:: SendUnicode("…")
@@ -39,13 +32,9 @@ SendUnicode(code) {
 <^>!sc034:: SendUnicode("»")
 <^>!sc029:: SendUnicode("’")
 <^>!sc009:: SendUnicode("°")
-<^>!+sc033:: {
-    SendText "«»"
-    KeyWait "Shift"
-    KeyWait "LAlt"
-	KeyWait "RAlt"
-    Send "{Left}"
-}
+
+^sc033:: SendUnicode("“") ; Ctrl + ,
+^sc034:: SendUnicode("”") ; Ctrl + .
 
 ; --- Гарячі клавіші ---
 ^!sc039:: ; Ctrl+Alt+Space (AlwaysOnTop)
@@ -67,6 +56,7 @@ SendUnicode(code) {
 ; --- Автозапуск ---
 AddShortcutToStartup() {
     shortcutPath := A_Startup "\" StrReplace(A_ScriptName, ".exe", "") ".lnk"
+	
     if (A_Args.Length > 0 && A_Args[1] = "/bg")
         return
 
@@ -76,6 +66,7 @@ AddShortcutToStartup() {
             MsgBox("Видалено.")
             ExitApp()
         }
+		
         return
     }
     
