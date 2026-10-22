@@ -33,8 +33,8 @@ SendUnicode(code) {
 <^>!sc029:: SendUnicode("’")
 <^>!sc009:: SendUnicode("°")
 
-^sc033:: SendUnicode("“") ; Ctrl + ,
-^sc034:: SendUnicode("”") ; Ctrl + .
+^sc033:: SendUnicode("„") ; Ctrl + ,
+^sc034:: SendUnicode("“") ; Ctrl + .
 
 ; --- Гарячі клавіші ---
 ^!sc039:: ; Ctrl+Alt+Space (AlwaysOnTop)
